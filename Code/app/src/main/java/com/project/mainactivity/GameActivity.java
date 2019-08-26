@@ -141,11 +141,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     if (checkBackgroundMiss(b))
                         b.setBackgroundResource(images[0]);
                 }
-            }, 3000);
+            }, 1000);
         } else if (checkBackgroundMole(button)) {
             button.setBackgroundResource(images[2]);
-            points += 100;
+            points += 5;
             scoreTxt.setText("Score: " + points);
+            if (points >= 30)
+                gameOver();
             final Button b = button;
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -154,7 +156,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     if (checkBackgroundHit(b))
                         b.setBackgroundResource(images[0]);
                 }
-            }, 3000);
+            }, 1000);
         }
     }
 
