@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "111767617037",
+    "firebase_url": "https://whack-a-mole-5e1f1.firebaseio.com",
+    "project_id": "whack-a-mole-5e1f1",
+    "storage_bucket": "whack-a-mole-5e1f1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:111767617037:android:7eafd036fcf519b7811f44",
+        "android_client_info": {
+          "package_name": "com.project.mainactivity"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "111767617037-kt942qmk8ia7bqmdsb3nokv9ka802c88.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.mainactivity",
+            "certificate_hash": "9464c55fdfba0a5c3cafe3bc5189a3ae90cef7e5"
+          }
+        },
+        {
+          "client_id": "111767617037-ok4dojep56o35nkio6asjv0tp0dfkm69.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqmRaaJToZOCahsuRwWWKXMZrTmVLknnE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "111767617037-ok4dojep56o35nkio6asjv0tp0dfkm69.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -21,11 +21,8 @@ public class MainActivity extends AppCompatActivity {
 
     //location
     private final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
-    private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-    private Location userLocation;
-    private boolean mLocationPermissionsGranted = false;
-
+    private final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
+    private final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
 
     private EditText nameEditText;
     private ImageView playBtn;
