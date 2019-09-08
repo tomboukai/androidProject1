@@ -97,4 +97,16 @@
 
     </TableLayout>
 
+    <fragment
+        android:id="@+id/map"
+        android:name="com.project.mainactivity.Fragments.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/table"
+        app:layout_constraintVertical_bias="1.0" />
+
+
 </android.support.constraint.ConstraintLayout>
