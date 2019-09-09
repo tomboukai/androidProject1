@@ -2,37 +2,48 @@
 //307929075
 package com.project.mainactivity;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-public class GameOverActivity extends AppCompatActivity {
+public class GameOverActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     //Firestore
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    //Map
+    private GoogleMap mMap;
+    private MapView mMapView;
+    LatLng location = new LatLng(0, 0);
+    private double lon;
+    private double lat;
 
     private SharedPreferences sharedPreferences;
     private TextView nameText;
     private TextView scoreTextView;
     private Button startBtn;
     private TableLayout table;
-    private double lon;
-    private double lat;
 
 
     @Override
@@ -67,8 +78,9 @@ public class GameOverActivity extends AppCompatActivity {
                         tableRow.addView(name);
                         tableRow.addView(score);
                         tableRow.setOnClickListener(v -> {
-                            lon = documentSnapshot.getDouble("lon");
-                            lat = documentSnapshot.getDouble("lat");
+                            location = new LatLng(documentSnapshot.getDouble("lon"), documentSnapshot.getDouble("lat"));
+                            mMap.addMarker(new MarkerOptions().position(location)
+                                    .title(name.getText().toString() + "'s Location"));                            mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
                         });
                         table.addView(tableRow);
                     }
@@ -79,6 +91,7 @@ public class GameOverActivity extends AppCompatActivity {
     }
 
     private void init() {
+        location = new LatLng(0, 0);
         sharedPreferences = getSharedPreferences(getPackageName(), MODE_PRIVATE);
         nameText = findViewById(R.id.nameText);
         scoreTextView = findViewById(R.id.scoreTextView);
@@ -91,5 +104,29 @@ public class GameOverActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+
+        initMap();
+    }
+
+    private void initMap() {
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        /*SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.mapView);*/
+
+        mMapView = findViewById(R.id.mapView);
+        mMapView.onCreate(null);
+        mMapView.onResume();
+        mMapView.getMapAsync(this);
+
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        LatLng sydney = new LatLng(lat, lon);
+        mMap.addMarker(new MarkerOptions().position(sydney)
+                .title("Marker in Sydney"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 }
