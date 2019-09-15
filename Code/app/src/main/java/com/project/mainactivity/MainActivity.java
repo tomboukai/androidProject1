@@ -38,17 +38,13 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("com.project.mainactivity", MODE_PRIVATE);
         nameEditText = findViewById(R.id.nameEditText);
         playBtn = findViewById(R.id.playBtn);
-        playBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (nameEditText.getText().length() == 0)
-                    Toast.makeText(MainActivity.this, "Name cannot be empty", Toast.LENGTH_SHORT).show();
-                else {
-                    sharedPreferences.edit().putString("name", nameEditText.getText().toString()).apply();
-                    Intent intent = new Intent(getApplicationContext(), GameActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
+        playBtn.setOnClickListener(v -> {
+            if (nameEditText.getText().length() == 0)
+                Toast.makeText(MainActivity.this, "Name cannot be empty", Toast.LENGTH_SHORT).show();
+            else {
+                sharedPreferences.edit().putString("name", nameEditText.getText().toString()).apply();
+                Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+                startActivity(intent);
             }
         });
     }

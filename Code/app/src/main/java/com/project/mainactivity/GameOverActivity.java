@@ -80,7 +80,8 @@ public class GameOverActivity extends AppCompatActivity implements OnMapReadyCal
                         tableRow.setOnClickListener(v -> {
                             location = new LatLng(documentSnapshot.getDouble("lon"), documentSnapshot.getDouble("lat"));
                             mMap.addMarker(new MarkerOptions().position(location)
-                                    .title(name.getText().toString() + "'s Location"));                            mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+                                    .title(name.getText().toString() + "'s Location"));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
                         });
                         table.addView(tableRow);
                     }
@@ -109,15 +110,11 @@ public class GameOverActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     private void initMap() {
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        /*SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.mapView);*/
 
         mMapView = findViewById(R.id.mapView);
         mMapView.onCreate(null);
         mMapView.onResume();
         mMapView.getMapAsync(this);
-
 
     }
 

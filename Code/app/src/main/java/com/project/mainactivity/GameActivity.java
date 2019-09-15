@@ -48,7 +48,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     private CountDownTimer countDownTimer;
     private final int LIVES = 3;
-    private final int DELAY_TIME = 3;
+    private final int DELAY_TIME = 1;
     private SharedPreferences sharedPreferences;
     private int points;
     private int lives;
@@ -61,7 +61,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private GridLayout gridLayout;
     private Button[] buttons = new Button[9];
     int[] images;
-    Drawable[] imagesD;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +75,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             public void onLocationResult(LocationResult locationResult) {
                 if (locationResult == null)
                     return;
-
                 userLocation = locationResult.getLastLocation();
             }
         };
@@ -86,18 +84,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     void init() {
 
         sharedPreferences = getSharedPreferences(getPackageName(), MODE_PRIVATE);
-        images = new int[4];
-        imagesD = new Drawable[4];
+        images = new int[5];
 
         images[0] = R.drawable.default_button;
         images[1] = R.drawable.mole_button;
         images[2] = R.drawable.hit_button;
         images[3] = R.drawable.miss_button;
-
-        imagesD[0] = getResources().getDrawable(R.drawable.default_button);
-        imagesD[1] = getResources().getDrawable(R.drawable.mole_button);
-        imagesD[2] = getResources().getDrawable(R.drawable.hit_button);
-        imagesD[3] = getResources().getDrawable(R.drawable.miss_button);
+        images[4] = R.drawable.bomb_button;
 
         scoreTxt = findViewById(R.id.scoreText);
         timerTxt = findViewById(R.id.timerText);
@@ -139,8 +132,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         Random rand = new Random();
         int num = rand.nextInt(buttons.length - 1);
         while (true) {
-            if (!checkBackgroundMole(buttons[num])) {
-                buttons[num].setBackgroundResource(images[1]);
+            if (!checkBackgroundMole(buttons[num]) && !checkBackgroundBomb(buttons[num])) {
+                if (rand.nextInt(2) == 0)
+                    buttons[num].setBackgroundResource(images[1]);
+                else
+                    buttons[num].setBackgroundResource(images[4]);
                 break;
             } else
                 num = rand.nextInt(buttons.length - 1);
@@ -150,7 +146,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         final Handler handler = new Handler();
         handler.postDelayed(() -> {
-            if (checkBackgroundMole(buttons[theNum]))
+            if (checkBackgroundMole(buttons[theNum]) || checkBackgroundBomb(buttons[theNum]))
                 buttons[theNum].setBackgroundResource(images[0]);
         }, 3000);
     }
@@ -183,12 +179,19 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 gameOver();
             final Button b = button;
             final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (checkBackgroundHit(b))
-                        b.setBackgroundResource(images[0]);
-                }
+            handler.postDelayed(() -> {
+                if (checkBackgroundHit(b))
+                    b.setBackgroundResource(images[0]);
+            }, 1000);
+        } else if (checkBackgroundBomb(button)) {
+            button.setBackgroundResource(images[3]);
+            points -= 3;
+            scoreTxt.setText("Score: " + points);
+            final Button b = button;
+            final Handler handler = new Handler();
+            handler.postDelayed(() -> {
+                if (checkBackgroundMiss(b))
+                    b.setBackgroundResource(images[0]);
             }, 1000);
         }
     }
@@ -205,27 +208,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         db.collection("LeaderBoards")
                 .add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Intent intent = new Intent(getApplicationContext(), GameOverActivity.class);
-                        startActivity(intent);
-                        countDownTimer.cancel();
-                        finish();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(GameActivity.this, "An error has occured", Toast.LENGTH_SHORT).show();
-            }
-        });
+                .addOnSuccessListener(documentReference -> {
+                    Intent intent = new Intent(getApplicationContext(), GameOverActivity.class);
+                    startActivity(intent);
+                    finish();
+                }).addOnFailureListener(e -> Toast.makeText(GameActivity.this, "An error has occured", Toast.LENGTH_SHORT).show());
     }
 
     private void getLocationFromUser() {
-        /*if (!checkLocationPermissions())
-            return;*/
-        //initMap();
-
         getDeviceLocation();
     }
 
@@ -238,7 +228,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 .addOnSuccessListener(location -> userLocation = location)
                 .addOnFailureListener(e -> {
                 });
-        // moveTo(new LatLng(location.getLatitude(), location.getLongitude()), CITY_ZOOM_LVL);
     }
 
     boolean checkBackgroundDefault(Button b) {
@@ -257,4 +246,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         return (b.getBackground().getConstantState() == getResources().getDrawable(R.drawable.miss_button).getConstantState());
     }
 
+    boolean checkBackgroundBomb(Button b) {
+        return (b.getBackground().getConstantState() == getResources().getDrawable(R.drawable.bomb_button).getConstantState());
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        countDownTimer.cancel();
+    }
 }
