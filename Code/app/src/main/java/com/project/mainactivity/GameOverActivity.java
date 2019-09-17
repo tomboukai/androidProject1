@@ -45,7 +45,6 @@ public class GameOverActivity extends AppCompatActivity implements OnMapReadyCal
     private Button startBtn;
     private TableLayout table;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
